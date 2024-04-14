@@ -22,7 +22,7 @@ set $term alacritty
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 exec ~/.azotebg
-exec swayidle timeout 300 swaylock
+exec swayidle timeout 900 swaylock
 exec swayidle after-resume swaylock
 exec blueman-applet
 exec nm-applet
@@ -190,11 +190,11 @@ exec waybar
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+s move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+    bindsym $mod+Shift+s scratchpad show
 
 # Status Bar:
 #
@@ -222,15 +222,26 @@ include /etc/sway/config.d/*
 
 
 # My Custom Config
-bindsym $mod+Control+l resize grow right 1 px or 1 ppt
-bindsym $mod+Control+k resize grow up 1 px or 1 ppt
-bindsym $mod+Control+j resize grow down 1 px or 1 ppt
-bindsym $mod+Control+h resize grow left 1 px or 1 ppt
+bindsym $mod+Control+l resize grow right 3 px or 3 ppt
+bindsym $mod+Control+k resize grow up 3 px or 3 ppt
+bindsym $mod+Control+j resize grow down 3 px or 3 ppt
+bindsym $mod+Control+h resize grow left 3 px or 3 ppt
 
-bindsym $mod+Alt+l resize shrink left 1 px or 1 ppt
-bindsym $mod+Alt+k resize shrink down 1 px or 1 ppt
-bindsym $mod+Alt+j resize shrink up 1 px or 1 ppt
-bindsym $mod+Alt+h resize shrink right 1 px or 1 ppt
+bindsym $mod+Alt+l resize shrink left 3 px or 3 ppt
+bindsym $mod+Alt+k resize shrink down 3 px or 3 ppt
+bindsym $mod+Alt+j resize shrink up 3 px or 3 ppt
+bindsym $mod+Alt+h resize shrink right 3 px or 3 ppt
+
+
+bindsym $mod+Control+Right resize grow right 3 px or 3 ppt
+bindsym $mod+Control+Up resize grow up 3 px or 3 ppt
+bindsym $mod+Control+Down resize grow down 3 px or 3 ppt
+bindsym $mod+Control+Left resize grow left 3 px or 3 ppt
+
+bindsym $mod+Alt+Right resize shrink left 3 px or 3 ppt
+bindsym $mod+Alt+Up resize shrink down 3 px or 3 ppt
+bindsym $mod+Alt+Down resize shrink up 3 px or 3 ppt
+bindsym $mod+Alt+Left resize shrink right 3 px or 3 ppt
 
 bindsym XF86AudioLowerVolume exec pactl -- set-sink-volume 0 -3%
 bindsym XF86AudioRaiseVolume exec pactl -- set-sink-volume 0 +3%
@@ -249,3 +260,5 @@ bindsym $mod+e exec thunar
 
 bindsym $mod+Tab exec focus output right
 bindsym $mod+Shift+Tab exec focus output left
+
+gaps inner 5

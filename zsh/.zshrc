@@ -4,22 +4,14 @@
 # Setting the locale (there prolly should be a better way to do this)
 # alias setloc='unset LANG; source /etc/profile.d/locale.sh;'
 
-# zsh profiler
-# zmodload zsh/zprof
-
 unsetopt correct_all
 
 # # This is to fix terminal being messed up on resizing on tiling window manager (awesome wm)
 # export PROMPT_COMMAND="resize &>/dev/null ; $PROMPT_COMMAND"
 
-# adding jetbrains' clion, pycharm, rider, etc generated shell scripts to PATH
-export PATH="/root/.local/share/gem/ruby/3.0.0/bin:$PATH"
-export PATH="/home/jshelly/.local/lib/python3.10/site-packages:$PATH"
-export PATH="$PATH:/home/jshelly/.local/share/gem/ruby/3.0.0/bin"
-export PATH="/home/jshelly/.gem/ruby/3.0.0/bin:$PATH"
 export PATH="/home/jshelly/.config/sway:$PATH"
 export EDITOR="nano"
-
+export XDG_CONFIG_HOME="$HOME/.config"
 export FZF_DEFAULT_COMMAND='find .'
 
 # adding MyScripts to path
@@ -123,7 +115,17 @@ alias cdfzf='cd `dirname $(fzf)`'
 # z() {zoxide $1}
 # compdef z=cd
 
-PROMPT="%f%B%F{45}[%f%b%B%F{45}%m%f%b%B%F{45}]%f%b%F{red}%(?.. [%?] )%f%F{44} $ %f"
+# Load version control information
+autoload -Uz vcs_info
+precmd() { vcs_info }
+
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:git:*' formats ' %F{yellow}(%b)%f'
+zstyle ':vcs_info:svn:*' formats ' %F{yellow}(%b)%f'
+
+# Set up the prompt (with git branch name)
+setopt PROMPT_SUBST
+PROMPT='%f%B%F{45}[%f%b%B%F{45}%n%f%b%B%F{45}]%f%b%F{red}%(?.. [%?])%f${vcs_info_msg_0_} %F{44}$ %f'
 
 # initial RPROMPT (on opening the terminal)
 RPROMPT="%F{140}$(pwd)%f%F{226}"
@@ -137,8 +139,6 @@ function chpwd() {
 # alias rungpu='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
 alias py='python3 -i ~/.local/MyScripts/py_alias_starter.py'
 alias paclog='bat /var/log/pacman.log'
-alias pyt='python3'
-alias dard="python3 ~/.local/MyScripts/dard.py"
 alias cls='clear'
 alias mars='d java -jar ~/.local/bin/Mars4_5.jar'
 # alias mc='rungpu java -jar /opt/Minecraft/TLauncher-2.75.jar'
@@ -204,3 +204,6 @@ export PATH="$PATH:$HOME/.spicetify"
 
 # zprof
 # eval "$(zoxide init zsh)"
+
+setopt AUTO_PUSHD
+setopt pushdminus
