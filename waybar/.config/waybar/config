@@ -1,0 +1,162 @@
+{
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar at the bottom of your screen
+    "height": 24, // Waybar height
+    // "width": 1366, // Waybar width
+    // Choose the order of the modules
+    "modules-left": ["sway/workspaces", "custom/scratchpad-indicator","custom/separator",  "cpu", "memory","custom/separator", "custom/mediaplayer"],
+    "modules-center": ["sway/window"],
+    "modules-right": [ "tray","custom/separator", "backlight", "battery","pulseaudio", "custom/separator", "clock#curr", "custom/separator", "clock#ind"],
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "active-only":false,
+        "all-outputs": true,
+        "format": "{icon}",
+        "persistent-workspaces":{
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+        },
+        "format-icons": {
+            //"1:web": "",
+            //"2:code": "",
+            //"3:term": "",
+            //"4:work": "",
+            //"5:music": "",
+            //"6:docs": "",
+            //"urgent": "",
+            //"focused": "",
+            //"default": "",
+            "10":"∅"
+        }
+    },
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "all-outputs": false,
+        "active-first": true,
+        "icon-size": 32,
+        "icon-theme" : "Obsidian",
+        "on-click-right": "minimize"
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    // clock at current location
+    "clock#curr": {
+        "interval":1,
+        //"format": "{:%a, %d %b '%y | %I:%M %p}",
+        "format": "<b>[{:%I:%M:%S %p]</b> %a %b %d '%y}",
+    },
+    // clock in india
+    "clock#ind": {
+        //"format": "{:%a, %d %b '%y | %I:%M %p}",
+        "format": "(IND) [{:%I:%M %p]}",
+        "timezone": "Asia/Kolkata"
+    },
+    "cpu": {
+        "format": "{usage}% ",
+        "interval": 2
+    },
+    "memory": {
+        "format": "{}% ",
+        "interval": 2
+    },
+    "battery": {
+        "bat": "BAT0",
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "network": {
+        // "interface": "wlp2s0", // (Optional) To force the use of this interface
+        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-disconnected": "Disconnected ⚠"
+    },
+    "pulseaudio": {
+        "scroll-step": 0.5,
+        "smooth-scrolling-threshold": 0.8,
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphones": "",
+            "handsfree": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", ""]
+        },
+
+        "on-click": "amixer set Master toggle",
+        "on-click-right": "pavucontrol"
+    },
+
+    "custom/mediaplayer": {
+        "exec": "/usr/bin/python3 $HOME/.config/waybar/mediaplayer.py",
+        "format": "{}",
+        "return-type": "json",
+        "on-click": "playerctl play-pause",
+    },
+
+
+    "custom/scratchpad-indicator": {
+        "format-text": "{}",
+        "return-type": "json",
+        "interval": 3,
+        "exec": "~/.config/waybar/scratchpad-indicator.sh 2> /dev/null",
+        "exec-if": "exit 0",
+        "on-click": "swaymsg 'scratchpad show'",
+        "on-click-right": "swaymsg 'move scratchpad'"
+    },
+    "custom/separator": {
+        "format": "|",
+        "interval": "once",
+        "tooltip": false
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        //"format": "{percent}% {icon}",
+        "format": "{icon}",
+        //"format-icons": ["", ""],
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+ // "cava": {
+ //     //        "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+ //     "framerate": 120,
+ //     "autosens": 1,
+ //     //"sensitivity": 100,
+ //     "bars": 8,
+ //     "lower_cutoff_freq": 50,
+ //     "higher_cutoff_freq": 10000,
+ //     "method": "pipewire",
+ //     "source": "auto",
+ //     "stereo": true,
+ //     "reverse": true,
+ //     "bar_delimiter": 0,
+ //     "monstercat": true,
+ //     "waves": true,
+ //     "noise_reduction": 0.5,
+ //     "input_delay": 0,
+ //     "format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+ //     "actions": {
+ //         "on-click-right": "mode"
+ //     }
+ // },
+}

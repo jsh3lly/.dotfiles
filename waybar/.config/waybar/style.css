@@ -1,0 +1,156 @@
+* {
+    border: none;
+    border-radius: 0;
+    /* font-family: "San Francisco Text"; */
+    font-family: "SF Pro Display";
+    min-height: 0px;
+}
+
+#waybar {
+    font-size: 14px;
+    font-weight:500;
+}
+
+
+window#waybar {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+#window {
+    font-weight: bolder;
+    font-size: 15px;
+}
+
+#workspaces button {
+    padding: 0 2px;
+    background: transparent;
+    color: white;
+}
+
+
+#workspaces button.empty {
+    border-top:none;
+}
+
+#workspaces button:not(.empty) {
+    border-top: 3px solid #FFFFFF;
+}
+
+/* window#waybar.empty #window { */
+/* 	color: rgb(0, 0, 0); */
+/* } */
+
+#workspaces button.focused {
+    /* color: #E08DAC; */
+    /* border-top-color: #E08DAC; */
+    color: black;
+    background-color:white;
+}
+
+
+/* #workspaces button.focused:not(.persistent) { */
+/**/
+/* } */
+
+#mode {
+    background: #64727D;
+    border-bottom: 3px solid white;
+}
+
+#cava, #backlight, #clock, #cpu, #memory, #network, #pulseaudio, #custom-mediaplayer, #tray, #mode {
+    padding: 0 5px;
+    margin: 0 0px;
+}
+
+
+#clock {
+    /* font-variant-numeric: tabular-nums; */
+    font-family: "SFMono Nerd Font";
+}
+
+#battery {
+    padding: 0 10px;
+}
+
+#battery {
+}
+
+#battery icon {
+    color: red;
+}
+
+#battery.charging {
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: black;
+    }
+}
+
+#battery.warning:not(.charging) {
+    color: white;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+
+@keyframes blink-red {
+    to {
+        background-color: orange;
+        color: red;
+    }
+}
+
+#battery.critical:not(.charging) {
+    color: red;
+    animation-name: blink-red;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#cpu {
+}
+
+#memory {
+}
+
+#network {
+}
+
+#network.disconnected {
+    background: #f53c3c;
+}
+
+#pulseaudio {
+}
+
+#pulseaudio.muted {
+}
+
+#custom-mediaplayer {
+    color: rgb(102, 220, 105);
+    /* color: #FFFFFF; */
+    font-weight: 600;
+}
+
+#cava {
+    color: rgb(102, 220, 105);
+}
+
+#tray {
+}
+
+#custom-separator {
+    margin: 0;
+    padding:0 5px;
+    border:0 transparent;
+    font-size:20px;
+}
