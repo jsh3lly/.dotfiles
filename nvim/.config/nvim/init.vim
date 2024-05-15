@@ -77,7 +77,7 @@ Plug 'MunifTanjim/nui.nvim'
 Plug 'lewis6991/hover.nvim'
 Plug 'alec-gibson/nvim-tetris'
 Plug 'tpope/vim-repeat'
-Plug 'p00f/nvim-ts-rainbow'
+" Plug 'p00f/nvim-ts-rainbow'
 Plug 'kevinhwang91/nvim-ufo'
 Plug 'kevinhwang91/promise-async'
 Plug 'alvan/vim-closetag'
@@ -176,11 +176,9 @@ tnoremap <Esc> <C-\><C-n>
 " tnoremap <C-Right> <ESC><C-W>l
 
 " select all text
-nmap <C-a> ggVG
+vmap <C-a> <Nop>
 
 " move updown by visual (wrapped) lines
-noremap j gj
-noremap k gk
 
 " mapping '#' to start of line
 nnoremap # ^
@@ -276,9 +274,14 @@ end
 require('lualine').setup {
     options = {
         -- theme = 'tokyonight',
-        theme = 'onedark',
+        -- theme = 'onedark',
         -- theme = 'catppuccin',
+        theme = 'auto',
         globalstatus = true,
+        --component_separators = { left = "¿", right = "¿" }, 
+        --section_separators = { left = "¿", right = "¿" },
+        component_separators = { left = "", right = "" }, 
+        section_separators = { left = "", right = "" },
     },
     sections = {
         lualine_a = {'mode'},
@@ -288,10 +291,10 @@ require('lualine').setup {
         lualine_y = {'progress'},
         lualine_z = {'location'}
     },
-    -- tabline = {
-    --     lualine_a = {'buffers'},
-    --     lualine_z = {'tabs'},
-    -- },
+    tabline = {
+        lualine_a = {'buffers'},
+        lualine_z = {'tabs'},
+    },
 }
 
 -- TODO: Set up vim surround (?)

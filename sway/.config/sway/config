@@ -22,8 +22,8 @@ set $term alacritty
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 exec ~/.azotebg
-exec swayidle timeout 900 swaylock
-exec swayidle after-resume swaylock
+exec swayidle timeout 900 "swaylock -c 222222"
+exec swayidle after-resume "swaylock -c 222222"
 exec blueman-applet
 exec nm-applet
 exec polkit-dumb-agent
@@ -260,5 +260,7 @@ bindsym $mod+e exec thunar
 
 bindsym $mod+Tab exec focus output right
 bindsym $mod+Shift+Tab exec focus output left
+
+bindsym Mod1+Tab workspace back_and_forth
 
 gaps inner 5
