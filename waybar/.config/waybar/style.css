@@ -7,19 +7,17 @@
 }
 
 #waybar {
-    font-size: 14px;
+    font-size: 15px;
     font-weight:500;
-}
-
-
-window#waybar {
-    background: rgba(0, 0, 0, 0.3);
     color: white;
+    /* This is to provide the grey background */
+    background: rgba(0, 0, 0, 0.3);
 }
 
 #window {
     font-weight: bolder;
-    font-size: 15px;
+    font-size:1.1em;
+    /* font-size: 15px; */
 }
 
 #workspaces button {
@@ -83,12 +81,12 @@ window#waybar {
 #battery.charging {
 }
 
-@keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: black;
-    }
-}
+/* @keyframes blink { */
+/*     to { */
+/*         background-color: #ffffff; */
+/*         color: black; */
+/*     } */
+/* } */
 
 #battery.warning:not(.charging) {
     color: white;
@@ -102,13 +100,13 @@ window#waybar {
 
 @keyframes blink-red {
     to {
-        background-color: orange;
-        color: red;
+        /* background-color: yellow; */
+        color: purple;
     }
 }
 
 #battery.critical:not(.charging) {
-    color: red;
+    color: pink;
     animation-name: blink-red;
     animation-duration: 0.2s;
     animation-timing-function: linear;
@@ -152,5 +150,9 @@ window#waybar {
     margin: 0;
     padding:0 5px;
     border:0 transparent;
-    font-size:20px;
+    font-size:1.5em;
+}
+
+#custom-scratchpad-indicator {
+    margin: 0 0 0 7px;
 }

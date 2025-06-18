@@ -1,0 +1,4 @@
+#!/bin/bash
+path=$(grimshot savecopy area)
+satty -f $path
+rm $path

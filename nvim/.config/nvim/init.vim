@@ -70,10 +70,7 @@ Plug 'stevearc/dressing.nvim'
 Plug 'mrjones2014/legendary.nvim'
 Plug 'folke/which-key.nvim'
 Plug 'williamboman/mason.nvim'
-Plug 'MunifTanjim/nui.nvim'
 " Plug 'rcarriga/nvim-notify'
-Plug 'folke/noice.nvim'
-Plug 'MunifTanjim/nui.nvim'
 Plug 'lewis6991/hover.nvim'
 Plug 'alec-gibson/nvim-tetris'
 Plug 'tpope/vim-repeat'
@@ -86,11 +83,13 @@ Plug 'navarasu/onedark.nvim'
 Plug 'ziontee113/icon-picker.nvim'
 Plug 'ku1ik/vim-pasta' " auto indent on paste!
 Plug 'petertriho/nvim-scrollbar'
-Plug 'ku1ik/vim-pasta' " auto indent on paste!
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'rose-pine/neovim'
+Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'honza/vim-snippets'
+
 " Plug 'romgrk/barbar.nvim'
-" Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 call plug#end()
 " ========== Setting opts for gui frontend(s) ==========
 " Neovide:
@@ -125,6 +124,7 @@ set undodir=~/.nvim-undodir
 set undoreload=10000
 set incsearch
 set gdefault "useful for global subst in %s/abc/xyz
+set cmdheight=0 "this makes the vim commands line be the same as the bottom statusbar, which is kinda dope
 let mapleader = " "
 
 " Text wrapping
@@ -146,6 +146,7 @@ au BufRead,BufNewFile *.g4 set filetype=antlr4
 au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.in set filetype=javascript
 au BufRead,BufNewFile *.out set filetype=javascript
+au BufRead,BufNewFile *.gd set noexpandtab
 
 "=============== Setting some general keybindings for neovim ===============
 " Make p do pasting with indentation in mind
@@ -257,10 +258,7 @@ require'nvim-web-devicons'.setup {
 }
 
 -- When creating a blankline (say using 'o'), indent it properly
-require("indent_blankline").setup {
-    -- for example, context is off by default, use this to turn it on
-    show_current_context = true,
-}
+require("ibl").setup()
 -- Lualine
 local function show_macro_recording()
     local recording_register = vim.fn.reg_recording()
@@ -270,32 +268,6 @@ local function show_macro_recording()
         return "Recording @" .. recording_register
     end
 end
-
-require('lualine').setup {
-    options = {
-        -- theme = 'tokyonight',
-        -- theme = 'onedark',
-        -- theme = 'catppuccin',
-        theme = 'auto',
-        globalstatus = true,
-        --component_separators = { left = "¿", right = "¿" }, 
-        --section_separators = { left = "¿", right = "¿" },
-        component_separators = { left = "", right = "" }, 
-        section_separators = { left = "", right = "" },
-    },
-    sections = {
-        lualine_a = {'mode'},
-        lualine_b = {'branch', 'diff', 'diagnostics', {"macro-recording",fmt = show_macro_recording}},
-        lualine_c = {'filename'},
-        lualine_x = {'encoding', 'fileformat', 'filetype'},
-        lualine_y = {'progress'},
-        lualine_z = {'location'}
-    },
-    tabline = {
-        lualine_a = {'buffers'},
-        lualine_z = {'tabs'},
-    },
-}
 
 -- TODO: Set up vim surround (?)
 
@@ -338,7 +310,7 @@ require'nvim-treesitter.configs'.setup {
             node_decremental = "grm",
         },
     },
-    ensure_installed = {'regex', 'toml', 'comment', 'tsx', 'luadoc', 'python', 'vimdoc', 'yaml', 'bash', 'lua', 'c', 'luap', 'html', 'julia', 'javascript', 'commonlisp', 'rust', 'markdown', 'typescript', 'query', 'vim', 'markdown_inline', 'json', 'java', 'cpp'},
+    ensure_installed = {'regex', 'toml', 'comment', 'tsx', 'luadoc', 'python', 'vimdoc', 'yaml', 'bash', 'lua', 'c', 'luap', 'html', 'julia', 'javascript', 'commonlisp', 'rust', 'markdown', 'typescript', 'query', 'vim', 'markdown_inline', 'json', 'java', 'cpp', 'gdscript', 'godot_resource', 'gdshader'},
     -- highlight = {
     --     -- ...
     -- },
@@ -417,6 +389,11 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+require'treesitter-context'.setup{
+    max_lines = 5, -- How many lines the window should span. Values <= 0 mean no limit.
+    multiline_threshold = 2, -- Maximum number of lines to show for a single context
+}
+
 require('Comment').setup()
 
 -- TODO: 
@@ -445,7 +422,7 @@ require("todo-comments").setup {
 }
 
 -- sus
-vim.keymap.set('n', '<leader>dd', function() require("duck").hatch("ඞ") end, {})
+vim.keymap.set('n', '<leader>dd', function() require("duck").hatch("🐈") end, {})
 vim.keymap.set('n', '<leader>dk', function() require("duck").cook() end, {})
 
 EOF
@@ -499,6 +476,7 @@ local on_attach = function(client, bufnr)
   -- buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
 end
 
+local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
 local cmp = require'cmp'
 cmp.setup({
 formatting = {
@@ -535,7 +513,19 @@ mapping = cmp.mapping.preset.insert({
 
 -- ['<C-Space>'] = cmp.mapping.complete(),
 ['<C-c>'] = cmp.mapping.close(),
-['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+-- ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+["<Tab>"] = cmp.mapping(
+  function(fallback)
+    cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
+  end,
+  { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+),
+["<S-Tab>"] = cmp.mapping(
+  function(fallback)
+    cmp_ultisnips_mappings.jump_backwards(fallback)
+  end,
+  { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+),
 ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 }),
 sources = cmp.config.sources({
@@ -598,11 +588,16 @@ sorting = {
 
 -- vim-language-server, sumneko/lua-language-server
 -- you may find additional lsps and how to configure them by doing :help lspconfig-all
-local servers = { "pyright", "vimls", "marksman",  "hls", "html", "cssls", "tsserver", "bashls", "rust_analyzer", "clangd", "misspell"} -- excluded ones: "marksman".  
+local servers = { "pyright", "vimls", "marksman",  "hls", "html", "cssls", "ts_ls", "bashls", "rust_analyzer", "clangd"} -- excluded ones: "marksman".  
 -- Implicitly activated: "clangd" (via clangd_extensions), "rust_analyzer" (via rust-tools), lua-language-server (via lua-ls), 
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+-- capabilities.textDocument.foldingRange = {
+--     dynamicRegistration = false,
+--     lineFoldingOnly = true
+-- }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
-    capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+    capabilities = capabilities,
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
@@ -732,9 +727,15 @@ settings = {
 },
 }
 
-require'lspconfig'.csharp_ls.setup{
+-- require'lspconfig'.csharp_ls.setup{
+--
+-- }
 
+require'lspconfig'.omnisharp.setup{
+cmd = {"dotnet", "/home/jshelly/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll"},
 }
+
+require('lspconfig').gdscript.setup(require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()))
 
 -- require'lspconfig'.rust_analyzer.setup{
 -- settings = {
@@ -992,40 +993,42 @@ vim.o.foldcolumn = '0' -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 local handler = function(virtText, lnum, endLnum, width, truncate)
-local newVirtText = {}
-local suffix = (' ... %d '):format(endLnum - lnum)
-local sufWidth = vim.fn.strdisplaywidth(suffix)
-local targetWidth = width - sufWidth
-local curWidth = 0
-for _, chunk in ipairs(virtText) do
-    local chunkText = chunk[1]
-    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-    if targetWidth > curWidth + chunkWidth then
-        table.insert(newVirtText, chunk)
-    else
-        chunkText = truncate(chunkText, targetWidth - curWidth)
-        local hlGroup = chunk[2]
-        table.insert(newVirtText, {chunkText, hlGroup})
-        chunkWidth = vim.fn.strdisplaywidth(chunkText)
-        -- str width returned from truncate() may less than 2nd argument, need padding
-        if curWidth + chunkWidth < targetWidth then
-            suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+    local newVirtText = {}
+    local suffix = ('  ⚞^•⩊•^⚟  ... %d '):format(endLnum - lnum)
+    local sufWidth = vim.fn.strdisplaywidth(suffix)
+    local targetWidth = width - sufWidth
+    local curWidth = 0
+    for _, chunk in ipairs(virtText) do
+        local chunkText = chunk[1]
+        local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+        if targetWidth > curWidth + chunkWidth then
+            table.insert(newVirtText, chunk)
+        else
+            chunkText = truncate(chunkText, targetWidth - curWidth)
+            local hlGroup = chunk[2]
+            table.insert(newVirtText, {chunkText, hlGroup})
+            chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if curWidth + chunkWidth < targetWidth then
+                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+            end
+            break
         end
-        break
+        curWidth = curWidth + chunkWidth
     end
-    curWidth = curWidth + chunkWidth
-end
-table.insert(newVirtText, {suffix, 'MoreMsg'})
-return newVirtText
+    table.insert(newVirtText, {suffix, 'MoreMsg'})
+    return newVirtText
 end
 
 require('ufo').setup({
-fold_virt_text_handler = handler,
-provider_selector = function(bufnr, filetype, buftype)
-    return {'treesitter', 'indent'}
-end
+    fold_virt_text_handler = handler,
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end
 })
 
 require("bufferline").setup({
@@ -1051,9 +1054,15 @@ options = {
 -- which-key setup
 vim.o.timeout = true
 vim.o.timeoutlen = 500
-require('legendary').setup({ which_key = { auto_register = true } })
+require('legendary').setup({ 
+    extensions = {
+        which_key = { auto_register = true }
+    },
+})
 local wk = require("which-key")
-wk.setup()
+wk.setup({
+    notify = false
+})
 wk.register({
 -- Panes
 ["<M-j>"] = {":TmuxNavigateDown<CR>", "Go to pane below"},
@@ -1160,7 +1169,7 @@ wk.register({
 -- ["<C-_>"] = {"gc", "(Un)comment line", noremap=false, mode="v"},
 
 -- Zoom current pane
-["<C-CR>"] = {"<Plug>(zoom-toggle)", "Zoom current pane"},
+["<C-CR>"] = {":call zoom#toggle()<CR>", "Zoom current pane"},
 
 -- LSP stuff
 ["<M-CR>"] = {"<cmd>CodeActionMenu<CR>", "Open Code Action Menu"},
@@ -1198,24 +1207,24 @@ require("mason").setup()
 --     max_width = 70,
 --     max_height=100,
 -- })
-require("noice").setup({
-lsp = {
-    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-    override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-        ["cmp.entry.get_documentation"] = true,
-        },
-    },
-    -- you can enable a preset for easier configuration
-    presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = true, -- add a border to hover docs and signature help
-        },
-})
+-- require("noice").setup({
+-- lsp = {
+--     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+--     override = {
+--         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+--         ["vim.lsp.util.stylize_markdown"] = true,
+--         ["cmp.entry.get_documentation"] = true,
+--         },
+--     },
+--     -- you can enable a preset for easier configuration
+--     presets = {
+--         bottom_search = true, -- use a classic bottom cmdline for search
+--         command_palette = true, -- position the cmdline and popupmenu together
+--         long_message_to_split = true, -- long messages will be sent to a split
+--         inc_rename = false, -- enables an input dialog for inc-rename.nvim
+--         lsp_doc_border = true, -- add a border to hover docs and signature help
+--         },
+-- })
 
 
 require("icon-picker").setup({
@@ -1227,10 +1236,45 @@ handlers = {
     cursor = false,
 }
 })
-EOF
 
 
-lua << EOF
+-- tokyonight = require("tokyonight").setup({
+--     transparent = true,
+--     on_colors = function(colors)
+--         colors.border = "#565f89"
+--     end,
+-- })
+--
+-- vim.cmd([[colorscheme tokyonight-moon]])
+
+-- require('onedark').setup {
+--     style = 'warmer',
+--     transparent = true,
+--
+--     lualine = {
+--         transparent = true,
+--     },
+-- }
+-- require('onedark').load()
+
+-- require("catppuccin").setup({
+-- transparent_background = true,
+-- color_overrides = {
+--     all = {
+--         crust = "#565f89",
+--         },
+--     },
+-- integrations = {
+--     cmp = true,
+--     gitsigns = true,
+--     nvimtree = true,
+--     notify = true,
+--     mason = true,
+--     noice = true,
+--     which_key =true,
+-- }
+-- })
+-- vim.cmd.colorscheme "catppuccin-mocha"
 require("rose-pine").setup({
     styles = {
         bold = true,
@@ -1239,5 +1283,34 @@ require("rose-pine").setup({
     },
 })
 
+vim.cmd.colorscheme "rose-pine-moon"
+
+require('lualine').setup {
+    options = {
+        -- theme = 'tokyonight',
+        -- theme = 'onedark',
+        -- theme = 'catppuccin',
+        theme = 'auto',
+        transparent = true,
+        globalstatus = true,
+        --component_separators = { left = "¿", right = "¿" }, 
+        --section_separators = { left = "¿", right = "¿" },
+        component_separators = { left = "", right = "" }, 
+        section_separators = { left = "", right = "" },
+    },
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {'branch', 'diff', 'diagnostics', {"macro-recording",fmt = show_macro_recording}},
+        lualine_c = {'filename'},
+        lualine_x = {'encoding', 'fileformat', 'filetype'},
+        lualine_y = {'progress'},
+        lualine_z = {'location'}
+    },
+    tabline = {
+        lualine_a = {'buffers'},
+        lualine_z = {'tabs'},
+    },
+}
+
+require('barbecue').setup()
 EOF
-colorscheme rose-pine-moon

@@ -1,7 +1,8 @@
 unsetopt correct_all
 
 export PATH="/home/jshelly/.config/sway:$PATH"
-export EDITOR="nano"  # to override alacritty and zshrc to using vim, therefore to mitigate running vim, inside vim, inside vim.
+export EDITOR="nvim"
+bindkey -e # to override zshrc to using vim, therefore to mitigate running vim, inside vim, inside vim.
 export XDG_CONFIG_HOME="$HOME/.config"
 export FZF_DEFAULT_COMMAND='find .'
 
@@ -91,6 +92,7 @@ alias vim='nvim'
 alias lsa='ls -a'
 alias l='ls -la --header'
 alias ll='ls -l --header'
+alias llt='ls -l --header -t'
 alias cp='cp -i'                                                # Confirm before overwriting something
 alias dt='d $TERM'
 alias diff='difft'
@@ -101,6 +103,7 @@ alias gitu='git add . && git commit && git push'
 alias dudir='dust'
 alias books='cd ~/Stuff/Books'
 alias cdfzf='cd `dirname $(fzf)`'
+alias pinfo='info'
 
 # Load version control information
 autoload -Uz vcs_info
@@ -122,6 +125,7 @@ function chpwd() {
 }
 
 # aliasis
+alias rp='realpath'
 alias py='python3 -i ~/.local/MyScripts/py_alias_starter.py'
 alias paclog='bat /var/log/pacman.log'
 alias cls='clear'
@@ -140,7 +144,7 @@ alias open='d xdg-open'
 alias o='open'
 alias neofetch='clear && neofetch'
 alias uni='cd ~/Stuff/Career/UNI'
-alias unisem='cd ~/"Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/SpringSummer/"'
+alias unisem='cd /home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Fall'
 alias myrepos='cd ~/Stuff/My-Repos'
 alias grep='rg'
 #----Some more settings----
@@ -149,8 +153,10 @@ alias grep='rg'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 
 #--- custom functions ---
-d() {$* & disown}
+d() {$* &; disown}
+run() {$* &; disown; exit}
 compdef d=exec
+compdef run=exec
 
 # open and kill terminal
 ok() {
@@ -174,3 +180,31 @@ cda() {
         echo $path_or_error
     fi
 }
+
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+# For QNX
+# pushd "/home/jshelly/qnx/installs/SDP8" > /dev/null
+# source qnxsdp-env.sh > /dev/null
+# popd > /dev/null
+#
+# export PYTHONPATH="/home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter/CMPUT-429/429-resources/gem5/src/python/gem5"
+
+
+# CMPUT 429 Environment variables
+export C429_RESOURCES=/home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter/CMPUT-429/429-resources
+export GEM_PATH=$C429_RESOURCES/gem5
+export GEM_CONFIGS=$C429_RESOURCES/gem5/configs
+export GEM_TESTS=$C429_RESOURCES/gem5/tests
+export GEM5_CONFIG=$C429_RESOURCES/local_resources/sources.json
+export CC=clang
+export CXX=clang++
+alias gem5=$GEM_PATH/build/RISCV/gem5.opt
+alias x86gem5=$GEM_PATH/build/X86/gem5.opt

@@ -126,9 +126,9 @@ class PlayerManager:
 
         if track_info:
             if player.props.status == "Playing":
-                track_info = "  " + track_info
-            else:
                 track_info = "  " + track_info
+            else:
+                track_info = "  " + track_info
         # # strip of if track_info too long
         if len(track_info) > MAX_OUTPUT_LEN:
             track_info = track_info[0:MAX_OUTPUT_LEN]

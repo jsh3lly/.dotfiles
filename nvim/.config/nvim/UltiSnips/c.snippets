@@ -1,0 +1,83 @@
+global !p
+from math import *
+
+def enforce_margin_at_all_times(margin, BORDER_MID_LEFT, BORDER_MID_RIGHT, BORDER_LENGTH, t):
+	if (len(t[1]) + len(BORDER_MID_LEFT) + len(BORDER_MID_RIGHT) + margin) >= BORDER_LENGTH:
+		return len(t[1]) + len(BORDER_MID_LEFT) + len(BORDER_MID_RIGHT) + margin
+	else:
+		return BORDER_LENGTH
+	
+
+"""
+USAGE: 
+
+snippet banner
+`!p
+
+snip.rv = banner_func(80)[0]`${1:COMMENT BODY}`!p
+snip.rv = banner_func(80)[1]
+`
+endsnippet
+"""
+def banner_func(BORDER_LENGTH, t):
+
+	BORDER_TOP_LEFT  = "/*"
+	BORDER_TOP_RIGHT = "*"
+	BORDER_MID_LEFT  = " *"
+	BORDER_MID_RIGHT = "*"
+	BORDER_BTM_LEFT  = " *"
+	BORDER_BTM_RIGHT = "/"
+	BORDER_EVERYWHERE_ELSE = "*"
+	INDENT = snip.indent
+	BORDER_LENGTH -= len(INDENT)
+
+	# This line ensures that if your COMMENT BODY becomes very long, then the banner
+	# auto adjusts its length
+	BORDER_LENGTH = enforce_margin_at_all_times(4, BORDER_MID_LEFT, BORDER_MID_RIGHT, BORDER_LENGTH, t)
+
+	# if snip.c == "":
+	# 	snip.rv = vars(snip)
+	top = BORDER_TOP_LEFT + (BORDER_EVERYWHERE_ELSE * (BORDER_LENGTH - len(BORDER_TOP_LEFT) - len(BORDER_TOP_RIGHT))) + BORDER_TOP_RIGHT
+	left_side = BORDER_MID_LEFT + ' '*(ceil(((len(top) - len(t[1]))/2)) - len(BORDER_MID_LEFT))
+	first_half = top + '\n' + INDENT + left_side 
+	btm = BORDER_BTM_LEFT + (BORDER_EVERYWHERE_ELSE * (BORDER_LENGTH - len(BORDER_BTM_LEFT) - len(BORDER_BTM_RIGHT))) + BORDER_BTM_RIGHT
+	right_side = ' '*(floor(((len(btm) - len(t[1]))/2)) - len(BORDER_MID_RIGHT)) + BORDER_MID_RIGHT
+	second_half = right_side + '\n' + INDENT + btm
+
+	return (first_half, second_half)
+endglobal
+
+
+snippet banner
+`!p
+
+snip.rv = banner_func(80, t)[0]`${1:COMMENT BODY}`!p
+snip.rv = banner_func(80, t)[1]
+`
+endsnippet
+
+snippet bannerM
+`!p
+
+snip.rv = banner_func(60, t)[0]`${1:COMMENT BODY}`!p
+snip.rv = banner_func(60, t)[1]
+`
+endsnippet
+
+
+snippet bannerS
+`!p
+
+snip.rv = banner_func(40, t)[0]`${1:COMMENT BODY}`!p
+snip.rv = banner_func(40, t)[1]
+`
+endsnippet
+
+
+snippet bannerXS
+`!p
+
+snip.rv = banner_func(20, t)[0]`${1:COMMENT BODY}`!p
+snip.rv = banner_func(20, t)[1]
+`
+endsnippet

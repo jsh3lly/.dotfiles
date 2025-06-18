@@ -22,17 +22,27 @@ set $term alacritty
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 exec ~/.azotebg
-exec swayidle timeout 900 "swaylock -c 222222"
-exec swayidle after-resume "swaylock -c 222222"
+exec swayidle timeout 900 "swaylock -c 444444"
+exec swayidle after-resume "swaylock -c 444444"
 exec blueman-applet
 exec nm-applet
 exec polkit-dumb-agent
+exec fusuma
+exec dotoold
+exec wl-paste -t text --watch clipman store
 #
 # Example configuration:
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
+
+# ===== Monitor configs =====
+# 1) Rosedale place:
+# output eDP-1 pos 0 350
+# output DP-4 pos 1920 0 adaptive_sync on
+
+output eDP-1
 
 default_border pixel 2
 # small enough you can't see it
@@ -74,8 +84,8 @@ input "1739:52862:VEN_06CB:00_06CB:CE7E_Touchpad" {
        tap enabled
        # natural_scroll enabled
        middle_emulation enabled
-       # pointer_accel 0.3 
-       # accel_profile adaptive
+       pointer_accel 0.25
+       accel_profile adaptive
 }
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
@@ -96,8 +106,8 @@ exec waybar
     bindsym $mod+q kill
 
     # Start your launcher
-    bindsym Mod1+Space exec rofi -show drun
-    bindsym Mod1+Shift_R exec rofi -show window
+    bindsym Mod1+Space exec rofi -show drun -monitor '-1'
+    bindsym Mod1+Shift_R exec rofi -show window -monitor '-1'
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -117,6 +127,7 @@ exec waybar
 # Moving around:
 #
     # # Move your focus around
+    focus_wrapping workspace
     bindsym $mod+h focus left
     bindsym $mod+j focus down
     bindsym $mod+k focus up
@@ -131,27 +142,27 @@ exec waybar
 # Workspaces:
 #
     # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
+    bindsym $mod+1 workspace number 0
+    bindsym $mod+2 workspace number 1
+    bindsym $mod+3 workspace number 2
+    bindsym $mod+4 workspace number 3
+    bindsym $mod+5 workspace number 4
+    bindsym $mod+6 workspace number 5
+    bindsym $mod+7 workspace number 6
+    bindsym $mod+8 workspace number 7
+    bindsym $mod+9 workspace number 8
+    bindsym $mod+0 workspace number 9
     # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
+    bindsym $mod+Shift+1 move container to workspace number 0
+    bindsym $mod+Shift+2 move container to workspace number 1
+    bindsym $mod+Shift+3 move container to workspace number 2
+    bindsym $mod+Shift+4 move container to workspace number 3
+    bindsym $mod+Shift+5 move container to workspace number 4
+    bindsym $mod+Shift+6 move container to workspace number 5
+    bindsym $mod+Shift+7 move container to workspace number 6
+    bindsym $mod+Shift+8 move container to workspace number 7
+    bindsym $mod+Shift+9 move container to workspace number 8
+    bindsym $mod+Shift+0 move container to workspace number 9
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 
@@ -246,21 +257,40 @@ bindsym $mod+Alt+Left resize shrink right 3 px or 3 ppt
 bindsym XF86AudioLowerVolume exec pactl -- set-sink-volume 0 -3%
 bindsym XF86AudioRaiseVolume exec pactl -- set-sink-volume 0 +3%
 
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
 
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym $mod+Shift+Space exec playerctl play-pause
-bindsym $mod+Shift+Right exec playerctl next
-bindsym $mod+Shift+Left exec playerctl previous
+bindsym XF86AudioPlay exec "playerctl --player spotify,brave,chromium,firefox play-pause"
+bindsym XF86AudioPrev exec "playerctl --player spotify,brave,chromium,firefox previous"
+bindsym XF86AudioNext exec "playerctl --player spotify,brave,chromium,firefox next"
+bindsym $mod+Shift+Space exec "playerctl --player=spotify,brave,chromium,firefox play-pause"
+bindsym $mod+Shift+Right exec "playerctl --player=spotify,brave,chromium,firefox next"
+bindsym $mod+Shift+Left exec "playerctl --player=spotify,brave,chromium,firefox previous"
 bindsym XF86AudioMute exec amixer set Master toggle
 
-bindsym Print exec grimshot save screen
-bindsym Shift+Print exec grimshot savecopy area
+bindcode 76 exec /home/jshelly/.config/sway/grimshot savecopy screen
+bindcode Shift+76 exec /home/jshelly/.config/sway/grimshot savecopy area
 
-bindsym $mod+e exec thunar
+bindsym $mod+e exec dolphin
+bindsym $mod+y exec $HOME/.local/bin/yyrunner.sh
+bindsym $mod+period exec smile
 
-bindsym $mod+Tab exec focus output right
-bindsym $mod+Shift+Tab exec focus output left
+bindsym $mod+Tab focus output right
+bindsym $mod+Shift+Tab focus output left
 
 bindsym Mod1+Tab workspace back_and_forth
 
-gaps inner 5
+gaps inner 3
+#gaps inner 0
+
+for_window [class="Godot"] floating enable
+for_window [title=".*UnityEditor.*"] floating enable
+for_window [title=".*Smile.*"] floating enable
+
+include ~/.config/sway/config.d/*.conf
+
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
