@@ -1,6 +1,5 @@
 unsetopt correct_all
 
-export PATH="/home/jshelly/.config/sway:$PATH"
 export EDITOR="nvim"
 bindkey -e # to override zshrc to using vim, therefore to mitigate running vim, inside vim, inside vim.
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -85,7 +84,7 @@ bindkey "^[[3~" delete-char # delete
 alias fixkeys='sudo pacman -Sy archlinux-keyring endeavouros-keyring'
 alias ru='evcxr'
 alias htop='btop'
-alias cat='bat'
+alias cat='bat --style=plain'
 alias ls='lsd'
 alias exa='exa --classify'
 alias vim='nvim'
@@ -126,7 +125,7 @@ function chpwd() {
 
 # aliasis
 alias rp='realpath'
-alias py='python3 -i ~/.local/MyScripts/py_alias_starter.py'
+alias py='python3 -i -c "from math import *; from random import *;"'
 alias paclog='bat /var/log/pacman.log'
 alias cls='clear'
 alias mars='d java -jar ~/.local/bin/Mars4_5.jar'
@@ -144,7 +143,7 @@ alias open='d xdg-open'
 alias o='open'
 alias neofetch='clear && neofetch'
 alias uni='cd ~/Stuff/Career/UNI'
-alias unisem='cd /home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Fall'
+alias unisem='cd /home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter'
 alias myrepos='cd ~/Stuff/My-Repos'
 alias grep='rg'
 #----Some more settings----
@@ -208,3 +207,4 @@ export CC=clang
 export CXX=clang++
 alias gem5=$GEM_PATH/build/RISCV/gem5.opt
 alias x86gem5=$GEM_PATH/build/X86/gem5.opt
+alias convert=magick

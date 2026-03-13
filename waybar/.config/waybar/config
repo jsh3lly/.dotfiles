@@ -1,12 +1,12 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar at the bottom of your screen
-    "height": 24, // Waybar height
+    "height": 28, // Waybar height
     // "width": 1366, // Waybar width
     // Choose the order of the modules
     "modules-left": ["sway/workspaces", "custom/scratchpad-indicator","custom/separator",  "cpu", "memory","custom/separator", "custom/mediaplayer"],
     "modules-center": ["sway/window"],
-    "modules-right": [ "tray","custom/separator", "backlight", "battery","pulseaudio", "custom/separator", "clock#curr", "custom/separator", "clock#ind"],
+    "modules-right": [ "tray","custom/separator", "backlight", "battery", "pulseaudio/slider", "pulseaudio", "custom/separator", "custom/weather",  "clock#curr", "custom/separator", "clock#ind"],
     "sway/workspaces": {
         "disable-scroll": true,
         "active-only":false,
@@ -110,6 +110,11 @@
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
         "format-disconnected": "Disconnected ⚠"
     },
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
+    },
     "pulseaudio": {
         "scroll-step": 0.5,
         "smooth-scrolling-threshold": 0.8,
@@ -158,6 +163,13 @@
         "format": "{icon}",
         //"format-icons": ["", ""],
         "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+    "custom/weather": {
+        "format": "{}°C",
+        "tooltip": true,
+        "interval": 3600,
+        "exec": "wttrbar --location ottawa",
+        "return-type": "json"
     },
  // "cava": {
  //     //        "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",

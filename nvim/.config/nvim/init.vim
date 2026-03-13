@@ -87,6 +87,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'rose-pine/neovim'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'honza/vim-snippets'
+Plug 'bullets-vim/bullets.vim'
+Plug 'dhruvasagar/vim-table-mode'
 
 " Plug 'romgrk/barbar.nvim'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
@@ -94,17 +96,18 @@ call plug#end()
 " ========== Setting opts for gui frontend(s) ==========
 " Neovide:
 if exists("g:neovide")
-    set guifont=JetbrainsMonoNL\ Nerd\ Font:h7
+    set guifont=JetbrainsMonoNL\ Nerd\ Font:h12
     " let g:neovide_transparency = 0.8
     let g:neovide_confirm_quit = v:true
-    let g:neovide_cursor_vfx_mode = "pixiedust"
-    let g:neovide_cursor_vfx_particle_lifetime = 2.0
-    let g:neovide_cursor_vfx_particle_density = 100.0
+    " let g:neovide_cursor_vfx_mode = "pixiedust"
+    " let g:neovide_cursor_vfx_particle_lifetime = 2.0
+    " let g:neovide_cursor_vfx_particle_density = 100.0
 endif
 
 
 " ========== Setting some general opts for neovim ==========
 let g:tmux_navigator_no_mappings = 1
+let g:startify_session_sort = 1
 filetype on
 " autocmd BufReadPre,FileReadPre *.txt,*.md setlocal spell spelllang=en_us
 set spell spelllang=en_us
@@ -965,16 +968,18 @@ set list listchars=tab:▸\ ,trail:·,nbsp:␣
 
 lua << EOF
 
-require("hover").setup {
-    init = function()
-        -- Require providers
-        require("hover.providers.lsp")
-        require('hover.providers.gh')
-        require('hover.providers.gh_user')
-        require('hover.providers.jira')
-        require('hover.providers.man')
-        require('hover.providers.dictionary')
-    end,
+require("hover").config {
+    providers = {
+    'hover.providers.lsp',
+    'hover.providers.man',
+    'hover.providers.diagnostic',
+    'hover.providers.dictionary',
+    'hover.providers.fold_preview',
+    'hover.providers.gh',
+    'hover.providers.gh_user',
+    'hover.providers.dap',
+    'hover.providers.jira',
+    },
     preview_opts = {
         border = nil
     },
@@ -983,11 +988,6 @@ require("hover").setup {
     preview_window = false,
     title = true
 }
-
-
--- Setup keymaps
--- vim.keymap.set("n", "<C-q>", require("hover").hover, {desc = "hover.nvim"})
-
 
 vim.o.foldcolumn = '0' -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
@@ -1191,10 +1191,20 @@ wk.register({
  -- MISC
 ["<C-S>"] = {"<cmd>SSave<CR>", "Save project..."},
 ["<C-E>"] = {"<cmd>NvimTreeToggle<CR>", "Toggle Nvim Tree"},
-["<C-Q>"] = {require("hover").hover, "Show Documentation"},
+["<C-q>"] = {require("hover").open, "Show Documentation"},
+["<C-S-q>"] = {require("hover").enter, "Enter Documentation"},
 
 ["zR"] = {require('ufo').openAllFolds, "Open All Folds"},
 ["zM"] = {require('ufo').closeAllFolds, "Close All Folds"},
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "hover",
+  callback = function()
+    vim.keymap.set("n", "<CR>", function()
+      require("hover").enter()
+    end, { buffer = true })
+  end,
 })
 
 

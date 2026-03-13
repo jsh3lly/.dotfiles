@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import os, sys
+
+for arg in sys.argv[1:]:
+    if not os.path.exists(arg):
+        print(f"Given path '{arg}' does not exist, aborting!")
+        exit(1)
+    if "/" in arg:
+        print(f"Path cannot contain '/'")
+        exit(1)
+
+
+for arg in sys.argv[1:]:
+    res = arg
+    res = res.replace("-", " ")
+    res = res.replace("_", " ")
+    res = list(filter(lambda x: not x == "", res.split(" ")))
+    res = "-".join(res)
+
+    if os.path.exists(res):
+        print(f"Couldn't change {arg} as {res} already exists!")
+        exit(1)
+    print(f"""changed "{arg}" to "{res}"! """)
+    os.rename(arg, res)
+

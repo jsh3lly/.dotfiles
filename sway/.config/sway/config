@@ -10,9 +10,7 @@
 # Alt -> Mod1
 set $mod Mod4
 
-
-set $next j
-set $prev k
+set $cmd_swaylock "swaylock -c 444444"
 
 # Your preferred terminal emulator
 set $term alacritty
@@ -22,14 +20,17 @@ set $term alacritty
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 exec ~/.azotebg
-exec swayidle timeout 900 "swaylock -c 444444"
-exec swayidle after-resume "swaylock -c 444444"
+exec swayidle timeout 900 $cmd_swaylock
+exec swayidle after-resume $cmd_swaylock
 exec blueman-applet
 exec nm-applet
 exec polkit-dumb-agent
 exec fusuma
 exec dotoold
 exec wl-paste -t text --watch clipman store
+exec sunsetr
+# This is to make double-click work in dolphin
+exec kbuildsycoca6
 #
 # Example configuration:
 #
@@ -123,6 +124,9 @@ exec waybar
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    bindsym Control+Alt+l exec $cmd_swaylock
+    bindsym Control+Alt+h exec "systemctl hibernate"
 #
 # Moving around:
 #
@@ -271,6 +275,9 @@ bindsym XF86AudioMute exec amixer set Master toggle
 bindcode 76 exec /home/jshelly/.config/sway/grimshot savecopy screen
 bindcode Shift+76 exec /home/jshelly/.config/sway/grimshot savecopy area
 
+bindcode 107 exec /home/jshelly/.config/sway/grimshot savecopy screen
+bindcode Shift+107 exec /home/jshelly/.config/sway/grimshot savecopy area
+
 bindsym $mod+e exec dolphin
 bindsym $mod+y exec $HOME/.local/bin/yyrunner.sh
 bindsym $mod+period exec smile
@@ -280,7 +287,7 @@ bindsym $mod+Shift+Tab focus output left
 
 bindsym Mod1+Tab workspace back_and_forth
 
-gaps inner 3
+gaps inner 5
 #gaps inner 0
 
 for_window [class="Godot"] floating enable

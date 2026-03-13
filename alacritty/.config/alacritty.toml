@@ -1,0 +1,72 @@
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.primary]
+background = "#080808"
+foreground = "#FFFFFF"
+
+[cursor.style]
+blinking = "Always"
+
+[font]
+# size = 7.5
+# size = 11.5
+size = 13
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "ExtraBold"
+
+[font.normal]
+family = "JetbrainsMono Nerd Font"
+style = "Medium"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;2u"
+key = "Return"
+mods = "Shift"
+
+# The following keybinds (up till 'END') are for tmux to be able to interpret these
+# so tmux itself, and neovim can use the keybinds. It's scaffolding.
+[[keyboard.bindings]]
+chars = "\u0010"
+key = "n"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;5u"
+key = "Return"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B[27;5;9~"
+key = "Tab"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B[27;6;9~"
+key = "Tab"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+key = "Q"
+mods = "Control|Shift"
+chars = "\u001B[113;6u"
+#END
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[window]
+opacity = 0.80
+decorations = "none"    # to remove bottom padding for neovim to not look ugly
+
+# to remove bottom padding for neovim to not look ugly
+[font.offset]
+x = 0
+y = 1
+
+[env]
+# This is to prevent font looking smaller on Xorg, compared to wayland
+WINIT_X11_SCALE_FACTOR = "1"
