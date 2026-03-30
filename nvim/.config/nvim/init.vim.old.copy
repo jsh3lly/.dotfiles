@@ -1,0 +1,27 @@
+" TODO: implement softwrap j,k goes to the next visual line (in the softwrap
+" TODO: Come up with a better way to manage themes
+" TODO: Properly setup mason.nvim
+" TODO: whichkey disable for 'c', 'd', etc
+" TODO: Make Noice retain messages for longer
+" TODO: Get ideavimrc from Omen
+" TODO: convert config to lua
+" NOTE: Plug plugins are located in /home/jshelly/.local/share/nvim/plugged
+" TODO: maybe have a key holding key bind for CursorHold??
+
+
+" ========== Setting some general opts for neovim ==========
+
+
+" --- nvim.cmp & LSP Config ---
+
+
+lua << EOF
+
+
+-- LSP stuff
+
+
+
+
+
+})

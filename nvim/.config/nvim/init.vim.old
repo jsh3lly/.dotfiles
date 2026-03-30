@@ -9,7 +9,6 @@
 " TODO: maybe have a key holding key bind for CursorHold??
 
 
-
 " Deps: pynvim, plug, fd
 " ========== Installing Some Plugins ==========
 call plug#begin()
@@ -21,7 +20,6 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'tpope/vim-surround'
 Plug 'phaazon/hop.nvim' " Easy motion type plugin
 Plug 'mhinz/vim-startify'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'nvim-lua/plenary.nvim' " Dependency for above
 " Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 Plug 'dylon/vim-antlr'
@@ -34,7 +32,6 @@ Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'numToStr/Comment.nvim'
 Plug 'andweeb/presence.nvim'
-Plug 'dhruvasagar/vim-zoom'
 Plug 'wesQ3/vim-windowswap'
 Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
@@ -46,17 +43,16 @@ Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
-Plug 'mfussenegger/nvim-jdtls'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'saghen/blink.cmp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'onsails/lspkind.nvim'
 Plug 'weilbith/nvim-code-action-menu'
 Plug 'kosayoda/nvim-lightbulb'
-Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'SirVer/ultisnips'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'windwp/nvim-autopairs'
@@ -277,14 +273,6 @@ end
 require'hop'.setup()
 EOF
 
-" Setup for vim-visual-multi
-let g:VM_default_mappings = 0
-let g:VM_maps = {}
-let g:VM_maps["Add Cursor Down"]             = '<M-j>'
-let g:VM_maps["Add Cursor Up"]               = '<M-k>'
-let g:VM_maps['Find Under']                  = ''
-let g:VM_maps['Find Subword Under']          = ''
-
 " Setup for copilot
 " imap <silent><script><expr> <F1> copilot#Accept("\<CR>")
 " let g:copilot_node_command = "~/.nvm/versions/node/v16.20.0/bin/node"
@@ -292,7 +280,7 @@ let g:VM_maps['Find Subword Under']          = ''
 
 " Setup for Treesitter
 lua << EOF
-require'nvim-treesitter.configs'.setup {
+require'nvim-treesitter.config'.setup {
     autotag = {
         enable = true,
     },
@@ -325,71 +313,69 @@ require'nvim-treesitter.configs'.setup {
         max_file_lines = nil, -- Do not enable for files with more than n lines, int
         -- colors = {}, -- table of hex strings
         -- termcolors = {} -- table of colour name strings
-    }
-}
-
-require'nvim-treesitter.configs'.setup {
-  textobjects = {
-    select = {
-      enable = true,
-
-      -- Automatically jump forward to textobj, similar to targets.vim
-      lookahead = true,
-
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["ac"] = "@class.outer",
-        -- You can optionally set descriptions to the mappings (used in the desc parameter of
-        -- nvim_buf_set_keymap) which plugins like which-key display
-        ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-      },
-      -- You can choose the select mode (default is charwise 'v')
-      --
-      -- Can also be a function which gets passed a table with the keys
-      -- * query_string: eg '@function.inner'
-      -- * method: eg 'v' or 'o'
-      -- and should return the mode ('v', 'V', or '<c-v>') or a table
-      -- mapping query_strings to modes.
-      selection_modes = {
-        ['@parameter.outer'] = 'v', -- charwise
-        ['@function.outer'] = 'V', -- linewise
-        ['@class.outer'] = '<c-v>', -- blockwise
-      },
-      -- If you set this to `true` (default is `false`) then any textobject is
-      -- extended to include preceding or succeeding whitespace. Succeeding
-      -- whitespace has priority in order to act similarly to eg the built-in
-      -- `ap`.
-      --
-      -- Can also be a function which gets passed a table with the keys
-      -- * query_string: eg '@function.inner'
-      -- * selection_mode: eg 'v'
-      -- and should return true of false
-      include_surrounding_whitespace = true,
     },
-  
- move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]"] = "@function.outer",
-        ["]]"] = { query = "@class.outer", desc = "Next class start" },
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["["] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
+
+    textobjects = {
+        select = {
+            enable = true,
+
+            -- Automatically jump forward to textobj, similar to targets.vim
+            lookahead = true,
+
+            keymaps = {
+                -- You can use the capture groups defined in textobjects.scm
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                -- You can optionally set descriptions to the mappings (used in the desc parameter of
+                -- nvim_buf_set_keymap) which plugins like which-key display
+                ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+            },
+            -- You can choose the select mode (default is charwise 'v')
+            --
+            -- Can also be a function which gets passed a table with the keys
+            -- * query_string: eg '@function.inner'
+            -- * method: eg 'v' or 'o'
+            -- and should return the mode ('v', 'V', or '<c-v>') or a table
+            -- mapping query_strings to modes.
+            selection_modes = {
+                ['@parameter.outer'] = 'v', -- charwise
+                ['@function.outer'] = 'V', -- linewise
+                ['@class.outer'] = '<c-v>', -- blockwise
+            },
+            -- If you set this to `true` (default is `false`) then any textobject is
+            -- extended to include preceding or succeeding whitespace. Succeeding
+            -- whitespace has priority in order to act similarly to eg the built-in
+            -- `ap`.
+            --
+            -- Can also be a function which gets passed a table with the keys
+            -- * query_string: eg '@function.inner'
+            -- * selection_mode: eg 'v'
+            -- and should return true of false
+            include_surrounding_whitespace = true,
+        },
+
+        move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                ["]"] = "@function.outer",
+                ["]]"] = { query = "@class.outer", desc = "Next class start" },
+            },
+            goto_next_end = {
+                ["]M"] = "@function.outer",
+                ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+                ["["] = "@function.outer",
+                ["[["] = "@class.outer",
+            },
+            goto_previous_end = {
+                ["[M"] = "@function.outer",
+                ["[]"] = "@class.outer",
+            },
+        },
     },
-  },
 }
 
 require'treesitter-context'.setup{
@@ -401,11 +387,6 @@ require('Comment').setup()
 
 -- TODO: 
 require('presence'):setup()
-
--- Window swap
-vim.cmd([[
-let g:windowswap_map_keys = 0
-]])
 
 require("todo-comments").setup {
     keywords = {
@@ -440,125 +421,120 @@ let g:context_enabled = 1
 " set statusline+=%{zoom#statusline()}
 
 
+lua << EOF
+require('blink.cmp').setup({
+  keymap = { preset = 'default' },
+  appearance = {
+    nerd_font_variant = 'mono'
+  },
+  completion = {
+    documentation = { auto_show = false }
+  },
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+  },
+  fuzzy = {
+    implementation = "prefer_rust_with_warning"
+  }
+})
+EOF
+
 
 " --- nvim.cmp & LSP Config ---
-set completeopt=menu,menuone,noselect
+" set completeopt=menu,menuone,noselect
 " vim popupmenu stuff
 " highlight NormalFloat guibg=NONE
-" highlight FloatBorder guibg=NONE
+highlight FloatBorder guibg=NONE
 
 lua << EOF
-require("nvim-autopairs").setup {}
-local nvim_lsp = require('lspconfig')
-local lspkind = require('lspkind')
-local signs = { Error = "❌", Warn = "⚠️", Hint = "💡", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  --Enable completion triggered by <c-x><c-o>
-  -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  local opts = { noremap=true, silent=true }
-
-  -- -- See `:help vim.lsp.*` for documentation on any of the below functions
-  -- buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  -- buf_set_keymap('n', 'gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  -- IMP: Using fzflua for the above 4 commands ^^
-  -- buf_set_keymap('n', '<C-q>', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts) -- IMP: Using hover.nvim for this
-  -- buf_set_keymap('n', '', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  -- -- buf_set_keymap('n', '<M-CR>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts) -- IMP: Using code actions plugin for this
-  -- buf_set_keymap('n', '<leader>cl', '<cmd>lua vim.lsp.codelens.run()<CR>', opts)
-  -- buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
-end
-
-local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
-local cmp = require'cmp'
-cmp.setup({
-formatting = {
-fields = {'abbr', 'kind'}, -- removes "menu"
-format = lspkind.cmp_format({
-  mode = 'symbol', -- show only symbol annotations
-  maxwidth = 25, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-  ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-
-  -- The function below will be called before any actual modifications from lspkind
-  -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-  before = function (entry, vim_item)
-    vim_item.menu = "" -- This disables the "macro_rules!" etc text in Rust
-    return vim_item
-  end
-
-})
-},
-snippet = {
-  -- REQUIRED - you must specify a snippet engine
-  expand = function(args)
-  vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-  end,
-},
-window = {
-  completion = cmp.config.window.bordered(),
-  documentation = cmp.config.window.bordered(),
-},
-mapping = cmp.mapping.preset.insert({
-['<C-k>'] = cmp.mapping.select_prev_item(),
-['<C-j>'] = cmp.mapping.select_next_item(),
-['<S-j>'] = cmp.mapping.scroll_docs(4),
-['<S-k>'] = cmp.mapping.scroll_docs(-4),
-
--- ['<C-Space>'] = cmp.mapping.complete(),
-['<C-c>'] = cmp.mapping.close(),
--- ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-["<Tab>"] = cmp.mapping(
-  function(fallback)
-    cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
-  end,
-  { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-),
-["<S-Tab>"] = cmp.mapping(
-  function(fallback)
-    cmp_ultisnips_mappings.jump_backwards(fallback)
-  end,
-  { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-),
-['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-}),
-sources = cmp.config.sources({
-  { name = 'nvim_lsp' },
-    { name = 'nvim_lsp_signature_help' },
-  -- { name = 'vsnip' }, -- For vsnip users.
-  -- { name = 'luasnip' }, -- For luasnip users.
-  { name = 'ultisnips' }, -- For ultisnips users.
-  -- { name = 'snippy' }, -- For snippy users.
-},
-{
-
-  { name = 'buffer' },
-  { path = 'path'}
-}),
-
-sorting = {
-        comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.recently_used,
-            require("clangd_extensions.cmp_scores"),
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
-        },
-    },
-
-})
+-- require("nvim-autopairs").setup {}
+-- local lspkind = require('lspkind')
+-- local signs = { Error = "❌", Warn = "⚠️", Hint = "💡", Info = " " }
+-- for type, icon in pairs(signs) do
+--   local hl = "DiagnosticSign" .. type
+--   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+-- end
+--
+-- local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
+-- local cmp = require'cmp'
+-- cmp.setup({
+--     formatting = {
+--         fields = {'abbr', 'kind'}, -- removes "menu"
+--         format = lspkind.cmp_format({
+--         mode = 'symbol', -- show only symbol annotations
+--         maxwidth = 25, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+--         ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+--
+--         -- The function below will be called before any actual modifications from lspkind
+--         -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+--         before = function (entry, vim_item)
+--         vim_item.menu = "" -- This disables the "macro_rules!" etc text in Rust
+--         return vim_item
+--         end
+--
+--         })
+--         },
+--     snippet = {
+--         -- REQUIRED - you must specify a snippet engine
+--         expand = function(args)
+--         vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+--         end,
+--         },
+--     window = {
+--         completion = cmp.config.window.bordered(),
+--         documentation = cmp.config.window.bordered(),
+--         },
+--     mapping = cmp.mapping.preset.insert({
+--     ['<C-k>'] = cmp.mapping.select_prev_item(),
+--     ['<C-j>'] = cmp.mapping.select_next_item(),
+--     ['<S-j>'] = cmp.mapping.scroll_docs(4),
+--     ['<S-k>'] = cmp.mapping.scroll_docs(-4),
+--
+--     -- ['<C-Space>'] = cmp.mapping.complete(),
+--     ['<C-c>'] = cmp.mapping.close(),
+--     -- ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+--     ["<Tab>"] = cmp.mapping(
+--     function(fallback)
+--     cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
+--     end,
+--     { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+--     ),
+--     ["<S-Tab>"] = cmp.mapping(
+--     function(fallback)
+--     cmp_ultisnips_mappings.jump_backwards(fallback)
+--     end,
+--     { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
+--     ),
+--     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+--     }),
+--     sources = cmp.config.sources({
+--     { name = 'nvim_lsp' },
+--     { name = 'nvim_lsp_signature_help' },
+--     -- { name = 'vsnip' }, -- For vsnip users.
+--     -- { name = 'luasnip' }, -- For luasnip users.
+--     { name = 'ultisnips' }, -- For ultisnips users.
+--     -- { name = 'snippy' }, -- For snippy users.
+--     },
+--     {
+--
+--         { name = 'buffer' },
+--         { path = 'path'}
+--     }),
+--
+--     sorting = {
+--         comparators = {
+--             cmp.config.compare.offset,
+--             cmp.config.compare.exact,
+--             cmp.config.compare.recently_used,
+--             require("clangd_extensions.cmp_scores"),
+--             cmp.config.compare.kind,
+--             cmp.config.compare.sort_text,
+--             cmp.config.compare.length,
+--             cmp.config.compare.order,
+--         },
+--     },
+--
+-- })
 
 -- Set configuration for specific filetype.
 -- cmp.setup.filetype('gitcommit', {
@@ -598,14 +574,39 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 --     dynamicRegistration = false,
 --     lineFoldingOnly = true
 -- }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
+
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- -- See `:help vim.lsp.*` for documentation on any of the below functions
+  -- buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  -- buf_set_keymap('n', 'gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  -- IMP: Using fzflua for the above 4 commands ^^
+  -- buf_set_keymap('n', '<C-q>', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts) -- IMP: Using hover.nvim for this
+  -- buf_set_keymap('n', '', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  -- -- buf_set_keymap('n', '<M-CR>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts) -- IMP: Using code actions plugin for this
+  -- buf_set_keymap('n', '<leader>cl', '<cmd>lua vim.lsp.codelens.run()<CR>', opts)
+  -- buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
+end
+
+for _, lsp_ in ipairs(servers) do
+    vim.lsp.config(lsp_, {
     capabilities = capabilities,
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
     }
-  }
+  })
+    vim.lsp.enable(lsp_)
 end
 
 -- Set up clangd_extensions: This automatically loads clangd and adds some extensions to it.
@@ -692,63 +693,40 @@ require("clangd_extensions").setup({
     },
 })
 
--- local rt = require("rust-tools")
--- rt.setup({
---   server = {
---     on_attach = function(_, bufnr)
---       -- Hover actions
---       vim.keymap.set("n", "<C-q>", rt.hover_actions.hover_actions, { buffer = bufnr })
---       -- -- Signature help
---       -- vim.keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { buffer = bufnr })
---       -- -- rename
---       -- vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = bufnr })
---     end,
---   },
--- })
--- rt.inlay_hints.enable()
 
-require'lspconfig'.lua_ls.setup {
-settings = {
-  Lua = {
-    runtime = {
-      -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-      version = 'LuaJIT',
+vim.lsp.config('lua_ls', {
+    settings = {
+        Lua = {
+            runtime = {
+                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = {'vim'},
+            },
+            workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+                enable = false,
+            },
+        },
     },
-    diagnostics = {
-      -- Get the language server to recognize the `vim` global
-      globals = {'vim'},
-    },
-    workspace = {
-      -- Make the server aware of Neovim runtime files
-      library = vim.api.nvim_get_runtime_file("", true),
-    },
-    -- Do not send telemetry data containing a randomized but unique identifier
-    telemetry = {
-      enable = false,
-    },
-  },
-},
-}
+})
+vim.lsp.enable('lua_ls')
 
--- require'lspconfig'.csharp_ls.setup{
---
--- }
 
-require'lspconfig'.omnisharp.setup{
+vim.lsp.config('omnisharp', {
 cmd = {"dotnet", "/home/jshelly/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll"},
-}
+})
+vim.lsp.enable('omnisharp')
 
-require('lspconfig').gdscript.setup(require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()))
 
--- require'lspconfig'.rust_analyzer.setup{
--- settings = {
---   ['rust-analyzer'] = {
---     diagnostics = {
---       enable = true,
---     },
---   },
--- },
--- }
+vim.lsp.config('gdscript', {require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())})
+vim.lsp.enable('gdscript')
 
 EOF
 
@@ -1085,22 +1063,12 @@ wk.register({
 
 -- leader key-binds
 ["<leader>"] = {
-    -- Panes
-    ["1"] = {"1<c-w>w", "Go to pane 1"},
-    ["2"] = {"2<c-w>w", "Go to pane 2"},
-    ["3"] = {"3<c-w>w", "Go to pane 3"},
-    ["4"] = {"4<c-w>w", "Go to pane 4"},
-    ["5"] = {"5<c-w>w", "Go to pane 5"},
-    ["6"] = {"6<c-w>w", "Go to pane 6"},
-    ["7"] = {"7<c-w>w", "Go to pane 7"},
-    ["8"] = {"8<c-w>w", "Go to pane 8"},
-    -- s = {"<cmd>call WindowSwap#EasyWindowSwap()<CR>", "Swap position of two panes"},
     s = {
         a = {"zg", "Add word to spell list"},
         j = {"]s", "Go to next spelling error"},
         k = {"[s", "Go to prev spelling error"},
         t = {"<cmd>setlocal spell! spelllang=en_us<CR><cmd>", "Turn spell checker on/off"},
-        s = {":WhichKey z=<CR>", "Get suggestions"}
+        s = {"z=", "Get suggestions"}
         },
     -- Buffers
     j = {"<cmd>bnext<cr>", "Go to next buffer"},
@@ -1120,17 +1088,15 @@ wk.register({
         d = {"<cmd>TodoLocList<cr>", "Show project TODOs"},
     },
 
-    ["<Right>"] = {"<cmd>BufferLineMoveNext<CR>", "Move current buffer forward"},
-    ["<Left>"] = {"<cmd>BufferLineMovePrev<CR>", "Move current buffer backward"},
-
     -- Fzflua
     f = {
-        name = "FzfLua actions...",
+        name = "FzfLua actions",
         f = {"<cmd>FzfLua files<CR>", "Show files list"},
         b = {"<cmd>FzfLua buffers<CR>", "Show opened buffers list"},
-        ["["] = {"<cmd>FzfLua grep_curbuf<CR>", "Grep current buffer"},
-        ["]"] = {"<cmd>FzfLua grep_project<CR>", "Grep project"},
+        g = {"<cmd>FzfLua grep_curbuf<CR>", "Grep current buffer"},
+        G = {"<cmd>FzfLua grep_project<CR>", "Grep project"},
         s = {"<cmd>FzfLua lsp_document_symbols<CR>", "Show Document symbols"},
+        S = {"<cmd>FzfLua lsp_live_workspace_symbols<CR>", "Show Workspace Symbols"},
     },
 
     -- Git signs
@@ -1150,23 +1116,11 @@ wk.register({
         q = {"<cmd>FzfLua lsp_workspace_diagnostics<CR>", "Get Workspace Diagnostics"},
     },
 
-["<F3>"] = {"<cmd>FzfLua lsp_live_workspace_symbols<CR>", "Show Workspace Symbols"},
 -- nvim extra motions
 ['s'] = {"<cmd>HopPatternAC<CR>", "Hop forward"},
 ['S'] = {"<cmd>HopPatternBC<CR>", "Hop backward"},
 ['<S-j>'] = {"<cmd>m+<cr>", "Move current line down"},
 ['<S-k>'] = {"<cmd>m-2<cr>", "Move current line up"},
-
--- nnoremap <A-j> :m .+1<CR>==
--- nnoremap <A-k> :m .-2<CR>==
--- inoremap <A-j> <Esc>:m .+1<CR>==gi
--- inoremap <A-k> <Esc>:m .-2<CR>==gi
--- vnoremap <A-j> :m '>+1<CR>gv=gv
--- vnoremap <A-k> :m '<-2<CR>gv=gv
-
--- Comment and uncomment (_ referes to /)
-["<C-_>"] = {"gcc", "(Un)comment line", noremap=false},
--- ["<C-_>"] = {"gc", "(Un)comment line", noremap=false, mode="v"},
 
 -- Zoom current pane
 ["<C-CR>"] = {":call zoom#toggle()<CR>", "Zoom current pane"},
