@@ -39,7 +39,6 @@ opt.shiftwidth = 4
 opt.expandtab = true
 
 -- Behavior
-opt.clipboard:append("unnamedplus")
 opt.timeoutlen = 500
 
 -- Search & Spell
@@ -82,6 +81,34 @@ vim.diagnostic.config({
         },
     },
 })
+
+-- =================================================
+-- make clipboard work seamlessly with tmux over ssh
+-- =================================================
+-- Use OSC 52 for clipboard over SSH/Tmux
+if vim.env.SSH_TTY ~= nil then
+    local function paste()
+        return {
+            vim.fn.split(vim.fn.getreg(""), "\n"),
+            vim.fn.getregtype(""),
+        }
+    end
+
+    vim.g.clipboard = {
+        name = "OSC 52",
+        copy = {
+            ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+            ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+        },
+        paste = {
+            ["+"] = paste,
+            ["*"] = paste,
+        },
+    }
+end
+
+-- Sync Neovim's default yank/delete register with the system clipboard
+vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 
 -- Disabling netrw
 -- vim.g.loaded_netrw = 1
