@@ -1,5 +1,6 @@
 unsetopt correct_all
 
+export PATH="/home/jshelly/.config/sway:$PATH"
 export EDITOR="nvim"
 bindkey -e # to override zshrc to using vim, therefore to mitigate running vim, inside vim, inside vim.
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -84,7 +85,7 @@ bindkey "^[[3~" delete-char # delete
 alias fixkeys='sudo pacman -Sy archlinux-keyring endeavouros-keyring'
 alias ru='evcxr'
 alias htop='btop'
-alias cat='bat --style=plain'
+alias cat='bat -P --style=plain'
 alias ls='lsd'
 alias exa='exa --classify'
 alias vim='nvim'
@@ -100,9 +101,7 @@ alias df='df -h'                                                # Human-readable
 alias free='free -m'                                            # Show sizes in MB
 alias gitu='git add . && git commit && git push'
 alias dudir='dust'
-alias books='cd ~/Stuff/Books'
 alias cdfzf='cd `dirname $(fzf)`'
-alias pinfo='info'
 
 # Load version control information
 autoload -Uz vcs_info
@@ -144,8 +143,8 @@ alias o='open'
 alias neofetch='clear && neofetch'
 alias uni='cd ~/Stuff/Career/UNI'
 alias unisem='cd /home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter'
-alias myrepos='cd ~/Stuff/My-Repos'
 alias grep='rg'
+alias lg='lazygit'
 #----Some more settings----
 
 # case insensitive cd
@@ -198,13 +197,20 @@ function yy() {
 
 
 # CMPUT 429 Environment variables
-export C429_RESOURCES=/home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter/CMPUT-429/429-resources
-export GEM_PATH=$C429_RESOURCES/gem5
-export GEM_CONFIGS=$C429_RESOURCES/gem5/configs
-export GEM_TESTS=$C429_RESOURCES/gem5/tests
-export GEM5_CONFIG=$C429_RESOURCES/local_resources/sources.json
-export CC=clang
-export CXX=clang++
-alias gem5=$GEM_PATH/build/RISCV/gem5.opt
-alias x86gem5=$GEM_PATH/build/X86/gem5.opt
+# export C429_RESOURCES=/home/jshelly/Stuff/Career/UNI/Coursework-and-Course-Material/Year-5/Winter/CMPUT-429/429-resources
+# export GEM_PATH=$C429_RESOURCES/gem5
+# export GEM_CONFIGS=$C429_RESOURCES/gem5/configs
+# export GEM_TESTS=$C429_RESOURCES/gem5/tests
+# export GEM5_CONFIG=$C429_RESOURCES/local_resources/sources.json
+# export CC=clang
+# export CXX=clang++
+# alias gem5=$GEM_PATH/build/RISCV/gem5.opt
+# alias x86gem5=$GEM_PATH/build/X86/gem5.opt
+
 alias convert=magick
+
+# Silence Shift + Arrow keys so they don't print A, B, C, D
+bindkey -r "^[[1;2A" # Shift + Up
+bindkey -r "^[[1;2B" # Shift + Down
+bindkey -r "^[[1;2C" # Shift + Right
+bindkey -r "^[[1;2D" # Shift + Left

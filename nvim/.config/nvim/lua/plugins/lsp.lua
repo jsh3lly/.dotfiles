@@ -139,6 +139,11 @@ return {
             -- Setup Mason to manage external binaries
             require("mason").setup()
 
+            vim.diagnostic.config({
+                virtual_text = false, -- Turns off the right-side text
+                virtual_lines = { current_line = true }, -- Shows error below the active line
+            })
+
             --  Define the servers you want Mason to install automatically
             local servers = {
                 pyright = {},       -- Python
@@ -172,6 +177,7 @@ return {
                     end,
                 },
             })
+            vim.lsp.enable("gdscript")
         end,
     },
 }

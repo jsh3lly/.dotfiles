@@ -20,6 +20,7 @@ map("n", "<leader>ss", "z=", { desc = "Get suggestions" })
 -- Buffers (<leader>j and <leader>k)
 map("n", "<leader>j", "<cmd>bnext<cr>", { desc = "Go to next buffer" })
 map("n", "<leader>k", "<cmd>bprevious<cr>", { desc = "Go to previous buffer" })
+map('n', '<C-Tab>', '<C-^>', { desc = 'Toggle last buffer' })
 
 -- Tabs/TODOs Submenu (<leader>t...)
 map("n", "<leader>tn", "<cmd>tabnew<CR>", { desc = "Create new tab" })
@@ -47,8 +48,8 @@ map("n", "zR", function() require('ufo').openAllFolds() end, { desc = "Open All 
 map("n", "zM", function() require('ufo').closeAllFolds() end, { desc = "Close All Folds" })
 
 -- Re-indent automatically on paste
-map({ "n", "v" }, "p", "p`[=`]", { desc = "Paste and auto-indent" })
-map({ "n", "v" }, "P", "P`[=`]", { desc = "Paste and auto-indent" })
+-- map({ "n", "v" }, "p", "p`[=`]", { desc = "Paste and auto-indent" })
+-- map({ "n", "v" }, "P", "P`[=`]", { desc = "Paste and auto-indent" })
 
 -- insert mode shift tabbing now dedents (tabbing already indents)
 map("i", "<S-Tab>", "<C-d>", { noremap = true, silent = true, desc = "Dedent line" })

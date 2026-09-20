@@ -40,6 +40,7 @@ opt.expandtab = true
 
 -- Behavior
 opt.timeoutlen = 500
+opt.formatoptions:append("o") -- doing 'o' or 'O' on a commented line will start the new line with the comment leader
 
 -- Search & Spell
 opt.ignorecase = true
@@ -61,6 +62,10 @@ opt.foldenable = true
 opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
+-- Max column and cursorline
+-- vim.opt.colorcolumn = "81"
+vim.opt.cursorline = true
+
 -- Neovide settings
 if vim.g.neovide then
     vim.opt.guifont = "JetBrainsMonoNL Nerd Font:h12"
@@ -75,7 +80,7 @@ vim.diagnostic.config({
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = "❌",
-            [vim.diagnostic.severity.WARN]  = "⚠️",
+            [vim.diagnostic.severity.WARN] = "⚠",
             [vim.diagnostic.severity.HINT]  = "💡",
             [vim.diagnostic.severity.INFO]  = " ",
         },

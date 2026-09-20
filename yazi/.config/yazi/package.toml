@@ -3,5 +3,10 @@ use = "kirasok/epub-preview"
 rev = "2e8079e"
 hash = "46037d1e5d2e1fa7e155babbf8e49812"
 
+[[plugin.deps]]
+use = "WhoSowSee/mdv-previewer"
+rev = "04aa2bd"
+hash = "64de0b69e2b4829bd7ad4c500a3f7a61"
+
 [flavor]
 deps = []

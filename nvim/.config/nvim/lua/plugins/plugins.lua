@@ -23,6 +23,12 @@ return {
             vim.cmd("colorscheme rose-pine")
         end,
     },
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+    },
 
     -- breadcrumbs
     {
@@ -369,12 +375,12 @@ return {
                 },
             },
             ensure_installed = {'regex', 'toml', 'comment', 'tsx', 'luadoc', 'python', 'vimdoc', 'yaml', 'bash', 'lua', 'c', 'luap', 'html', 'julia', 'javascript', 'commonlisp', 'rust', 'markdown', 'typescript', 'query', 'vim', 'markdown_inline', 'json', 'java', 'cpp', 'gdscript', 'godot_resource', 'gdshader'},
-            rainbow = {
-                enable = false,
-                -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
-                extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-                max_file_lines = nil, -- Do not enable for files with more than n lines, int
-            },
+            -- rainbow = {
+            --     enable = false,
+            --     -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+            --     extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+            --     max_file_lines = nil, -- Do not enable for files with more than n lines, int
+            -- },
 
             textobjects = {
                 select = {
@@ -509,8 +515,6 @@ return {
         },
 
         opts = {
-            close_if_last_window = true,
-
             window = {
                 width = 30, -- Classic sidebar width
                 mappings = {
@@ -520,14 +524,14 @@ return {
                     ["?"]     = "show_help",      -- 'Help' (toggle_help)
                     ["<C-e>"] = "close_window",   -- 'Tree Close' (toggles off when focused)
                     ["<S-CR>"] = "open_vsplit",    -- 'Open in vsplit' (node.open.vertical)
-                    ["f"]     = "fuzzy_finder",   -- 'Live Filter' (live_filter.start)
                 },
             },
 
             filesystem = {
                 filtered_items = {
-                    hide_dotfiles = false,
-                    hide_gitignored = false,
+                    visible = true,
+                    -- hide_dotfiles = false,
+                    -- hide_gitignored = false,
                 },
                 follow_current_file = {
                     enabled = true,
@@ -541,7 +545,8 @@ return {
         "bullets-vim/bullets.vim",
         init = function()
             -- This disables the automatic promotion/cycling mechanic!
-            vim.g.bullets_bullet_types = { '-' }
+            -- vim.g.bullets_bullet_types = { '-' }
+            vim.g.bullets_outline_levels = {'std-'}
             vim.g.bullets_delete_last_bullet_if_empty = 1
         end,
         -- 2. This ensures it loads for markdown and text files
@@ -649,5 +654,37 @@ return {
             -- preview_window = false,
             -- title = true
         }
-    }
+    },
+
+    {
+        "teatek/gdscript-extended-lsp.nvim", opts = {}
+    },
+
+    {
+        "habamax/vim-godot",
+    },
+
+    -- {
+    --     'numToStr/Comment.nvim',
+    --     opts = {
+    --         -- add any options here
+    --     }
+    -- },
+    {
+        "folke/ts-comments.nvim",
+        opts = {
+            lang = {
+                gdscript = "## %s"
+            }
+        },
+        event = "VeryLazy",
+        enabled = vim.fn.has("nvim-0.10.0") == 1,
+    },
+
+    -- lazy.nvim
+    {
+        'nemanjamalesija/smart-paste.nvim',
+        event = 'VeryLazy',
+        config = true,
+    },
 }

@@ -27,7 +27,7 @@ exec nm-applet
 exec polkit-dumb-agent
 exec fusuma
 exec dotoold
-exec wl-paste -t text --watch clipman store
+exec wl-paste --watch cliphist store
 exec sunsetr
 # This is to make double-click work in dolphin
 exec kbuildsycoca6
@@ -51,7 +51,7 @@ default_border pixel 2
 # titlebar_border_thickness 0
 # titlebar_padding 0
 
-exec /home/jshelly/.config/sway/inactive-windows-transparency.py --opacity 0.96
+exec /home/jshelly/.config/sway/inactive-windows-transparency.py --opacity 0.98
 
 #exec firefox
 #exec autotiling
@@ -109,6 +109,7 @@ exec waybar
     # Start your launcher
     bindsym Mod1+Space exec rofi -show drun -monitor '-1'
     bindsym Mod1+Shift_R exec rofi -show window -monitor '-1'
+    bindsym $mod+Shift+v exec rofi -modi clipboard:~/.config/sway/cliphist-rofi-img -show clipboard -show-icons
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -272,13 +273,14 @@ bindsym $mod+Shift+Right exec "playerctl --player=spotify,brave,chromium,firefox
 bindsym $mod+Shift+Left exec "playerctl --player=spotify,brave,chromium,firefox previous"
 bindsym XF86AudioMute exec amixer set Master toggle
 
+# printscreen, shoft+printscreen
 bindcode 76 exec /home/jshelly/.config/sway/grimshot savecopy screen
 bindcode Shift+76 exec /home/jshelly/.config/sway/grimshot savecopy area
 
 bindcode 107 exec /home/jshelly/.config/sway/grimshot savecopy screen
 bindcode Shift+107 exec /home/jshelly/.config/sway/grimshot savecopy area
 
-bindsym $mod+e exec dolphin
+bindsym $mod+e exec nautilus
 bindsym $mod+y exec $HOME/.local/bin/yyrunner.sh
 bindsym $mod+period exec smile
 
@@ -290,9 +292,9 @@ bindsym Mod1+Tab workspace back_and_forth
 gaps inner 5
 #gaps inner 0
 
-for_window [class="Godot"] floating enable
 for_window [title=".*UnityEditor.*"] floating enable
 for_window [title=".*Smile.*"] floating enable
+# for_window [app_id="org.godotengine.Editor"] floating enable, resize set 1920 1080
 
 include ~/.config/sway/config.d/*.conf
 
